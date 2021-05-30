@@ -63,7 +63,7 @@ fn frame(mut app App) {
 		})
 	}
 
-	time.sleep(1000000000)
+	time.sleep(100000000)
 
 	app.gg.end()
 }
