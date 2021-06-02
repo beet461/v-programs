@@ -3,6 +3,7 @@ import gx
 import time
 import rand
 
+// Declaring constants and structs
 enum Dir {
 	up = 1
 	down = 2
@@ -11,87 +12,130 @@ enum Dir {
 }
 
 const (
-	tick_diff  = 1000
+	tick_diff  = 200
 	win_width  = 800
-	win_height = 640
+	win_height = 800
 )
+
+struct Pos {
+mut:
+	x int
+	y int
+}
 
 struct App {
 mut:
 	gg       &gg.Context
-	x        f32
-	y        f32
-	applex   f32
-	appley   f32
-	score	 int
-	count    int
+	snake    []Pos
+	apple    Pos
 	dir      Dir
+	ready    bool
+	score    int
 	pre_tick i64
 }
 
-const font = $embed_file('../assets/RobotoMono-Regular.ttf')
+// Font
+const font = $embed_file('../assets/VictorMonoAll/TTF/VictorMono-MediumItalic.ttf')
 
+// Two functions are for adding or subtracting two instances of Pos together
+fn (x Pos) + (y Pos) Pos {
+	return Pos{x.x + y.x, x.y + y.y}
+}
+
+fn (x Pos) - (y Pos) Pos {
+	return Pos{x.x - y.x, x.y - y.y}
+}
+
+// Generates random number divisb=ible by 5 and within board and not on snake
 fn (mut app App) food() {
-	app.applex = rand.int_in_range(5, 70)
-	app.appley = rand.int_in_range(5, 54)
+	app.apple.x = rand.int_in_range(5, 70)
+	app.apple.y = rand.int_in_range(5, 70)
+	if app.apple.x % 5 == 0 && app.apple.y % 5 == 0 && app.apple !in app.snake {
+		return
+	} else {
+		app.food()
+	}
+}
+
+fn (mut app App) reset() {
+	// Resets everything back to original state
+	app.snake = [Pos{15, 35}, Pos{10, 35}, Pos{5, 35}]
+	app.apple = Pos{35, 35}
+	app.dir = .right
+	app.ready = false
+	app.score = 0
 }
 
 fn frame(mut app App) {
 	app.gg.begin()
 
-	// draw border
-	app.gg.draw_rect(40, 40, 720, 560, gx.black)
-	app.gg.draw_rect(50, 50, 700, 540, gx.rgb(230, 252, 236))
+	// User must press enter to show that they are ready and the game can start
+	if !app.ready {
+		app.gg.draw_text(250, 10, 'Press Enter to begin', gx.TextCfg{ size: 30 })
+		app.gg.end()
+		return
+	}
 
+	// If snake has gone out of box, or gone into itself, reset.
+	if app.snake[0].x > 70 || app.snake[0].x < 5 || app.snake[0].y > 70 || app.snake[0].y < 5
+		|| app.snake[0] in app.snake[1..] {
+		app.reset()
+	}
+
+	app.gg.draw_rect(50, 50, 700, 700, gx.white)
+
+	// Records ticks now and compares it with the last time it was checked. If it above tick_diff, then it continues
 	ticks_now := time.ticks()
 
-	if app.count <= 0 {
-		if ticks_now - app.pre_tick >= tick_diff {
-			app.pre_tick = ticks_now
+	if ticks_now - app.pre_tick >= tick_diff {
+		app.pre_tick = ticks_now
 
-			match app.dir {
-				.up {
-					app.y -= 5
-				}
-				.down {
-					app.y += 5
-				}
-				.right {
-					app.x += 5
-				}
-				.left {
-					app.x -= 5
-				}
+		// Adds position values to move
+		dir_prev := match app.dir {
+			.up {
+				Pos{0, -5}
+			}
+			.down {
+				Pos{0, 5}
+			}
+			.right {
+				Pos{5, 0}
+			}
+			.left {
+				Pos{-5, 0}
 			}
 		}
 
-		// first snake block
-		app.gg.draw_rounded_rect(app.x * 10, app.y * 10, 50, 50, 10, gx.rgb(100, 56, 78))
+		// Moves head of snake, and all others follow
+		mut prev := app.snake[0]
+		app.snake[0] = app.snake[0] + dir_prev
 
-		// apple
-		app.gg.draw_rounded_rect(app.applex * 10, app.appley * 10, 50, 50, 25, gx.rgb(135,
-			255, 135))
-		
-		if app.x == app.applex && app.y == app.appley{
-				app.score++
-				app.food()
-				for app.applex % 5 != 0 {
-					app.food()
-				}
-				
-				for app.appley % 5 != 0 {
-					app.food()
-				}
+		// Moves each square to the position of the one ahead it
+		for i in 1 .. app.snake.len {
+			tmp := app.snake[i]
+			app.snake[i] = prev
+			prev = tmp
 		}
 
-		app.gg.draw_text(10, 10, '$app.score', gx.TextCfg{
-			size: 30
-		})
-	} else {
-		app.gg.draw_text(10, 10, '$app.count', gx.TextCfg{
-			size: 30
-		})
+		// If snake head at the same coordinates as apple, add to score, generate new coordinates for apple, add square on to end of snake
+		if app.snake[0] == app.apple {
+			app.score++
+			app.food()
+			app.snake << app.snake.last() + app.snake.last() - app.snake[app.snake.len - 2]
+		}
 	}
+
+	// draw snake
+	for pos in app.snake {
+		app.gg.draw_rounded_rect(pos.x * 10, pos.y * 10, 50, 50, 10, gx.rgb(rand.byte(),
+			rand.byte(), rand.byte()))
+	}
+
+	// draw apple
+	app.gg.draw_rounded_rect(app.apple.x * 10, app.apple.y * 10, 50, 50, 25, gx.rgb(135,
+		255, 135))
+
+	app.gg.draw_text(350, 10, 'Score: $app.score', gx.TextCfg{ size: 30 })
 
 	app.gg.end()
 }
@@ -99,27 +143,24 @@ fn frame(mut app App) {
 fn keydown(key gg.KeyCode, mod gg.Modifier, mut app App) {
 	match key {
 		.enter {
-			app.count--
+			app.ready = true
 		}
-		.left_control {
-			app.gg.end()
-		}
-		.up {
+		.up, .w {
 			if app.dir != .down {
 				app.dir = .up
 			}
 		}
-		.down {
+		.down, .s {
 			if app.dir != .up {
 				app.dir = .down
 			}
 		}
-		.right {
+		.right, .d {
 			if app.dir != .left {
 				app.dir = .right
 			}
 		}
-		.left {
+		.left, .a {
 			if app.dir != .right {
 				app.dir = .left
 			}
@@ -131,11 +172,9 @@ fn keydown(key gg.KeyCode, mod gg.Modifier, mut app App) {
 fn main() {
 	mut app := &App{
 		gg: 0
-		x: 5
-		y: 32
-		applex: 40
-		appley: 32
-		count: 3
+		snake: [Pos{15, 35}, Pos{10, 35}, Pos{5, 35}]
+		apple: Pos{35, 35}
+		dir: .right
 	}
 
 	mut font_copy := font
@@ -152,6 +191,7 @@ fn main() {
 		frame_fn: frame
 		keydown_fn: keydown
 		user_data: app
+		window_title: 'Snek'
 		font_bytes_normal: font_bytes
 	)
 
