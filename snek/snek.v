@@ -29,13 +29,12 @@ mut:
 	snake    []Pos
 	apple    Pos
 	dir      Dir
-	ready    bool
 	score    int
 	pre_tick i64
 }
 
 // Font
-// const font = $embed_file('../assets/VictorMonoAll/TTF/VictorMono-MediumItalic.ttf')
+const font = $embed_file('../assets/VictorMonoAll/TTF/VictorMono-MediumItalic.ttf')
 
 // Two functions are for adding or subtracting two instances of Pos together
 fn (x Pos) + (y Pos) Pos {
@@ -62,19 +61,11 @@ fn (mut app App) reset() {
 	app.snake = [Pos{15, 35}, Pos{10, 35}, Pos{5, 35}]
 	app.apple = Pos{35, 35}
 	app.dir = .right
-	app.ready = false
 	app.score = 0
 }
 
 fn frame(mut app App) {
 	app.gg.begin()
-
-	// User must press enter to show that they are ready and the game can start
-	if !app.ready {
-		// app.gg.draw_text(250, 10, 'Press Enter to begin', gx.TextCfg{ size: 30 })
-		app.gg.end()
-		return
-	}
 
 	// If snake has gone out of box, or gone into itself, reset.
 	if app.snake[0].x > 70 || app.snake[0].x < 5 || app.snake[0].y > 70 || app.snake[0].y < 5
@@ -128,23 +119,20 @@ fn frame(mut app App) {
 	// draw snake
 	for pos in app.snake {
 		app.gg.draw_rect(pos.x * 10, pos.y * 10, 50, 50, gx.white)
-		app.gg.draw_rect(pos.x * 10 + 1, pos.y * 10 + 1, 48, 48, gx.rgb(237, 54, 97))
+		app.gg.draw_rect(pos.x*10+1, pos.y*10+1, 48, 48, gx.rgb(255, 120, 120))
 	}
 
 	// draw apple
 	app.gg.draw_rounded_rect(app.apple.x * 10, app.apple.y * 10, 50, 50, 25, gx.rgb(135,
 		255, 135))
 
-	// app.gg.draw_text(350, 10, 'Score: $app.score', gx.TextCfg{ size: 30 })
+	app.gg.draw_text(350, 10, 'Score: $app.score', gx.TextCfg{ size: 30 })
 
 	app.gg.end()
 }
 
 fn keydown(key gg.KeyCode, mod gg.Modifier, mut app App) {
 	match key {
-		.enter {
-			app.ready = true
-		}
 		.up, .w {
 			if app.dir != .down {
 				app.dir = .up
@@ -176,13 +164,13 @@ fn main() {
 		apple: Pos{35, 35}
 		dir: .right
 	}
-	/*
+
 	mut font_copy := font
 
 	font_bytes := unsafe {
 		font_copy.data().vbytes(font_copy.len)
 	}
-	*/
+
 	app.gg = gg.new_context(
 		bg_color: gx.rgb(230, 252, 236)
 		width: win_width
@@ -192,7 +180,7 @@ fn main() {
 		keydown_fn: keydown
 		user_data: app
 		window_title: 'Snek'
-		// font_bytes_normal: font_bytes
+		font_bytes_normal: font_bytes
 	)
 
 	app.gg.run()
