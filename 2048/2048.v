@@ -12,7 +12,7 @@ struct Theme {
 
 struct Tiles {
 mut:
-	val string
+	val int
 	col gx.Color
 }
 
@@ -21,6 +21,7 @@ enum Dir {
 	down
 	right
 	left
+	no_dir
 }
 
 struct App {
@@ -117,29 +118,56 @@ const (
 	theme    = colorful
 )
 
+// assign colors
 fn assign_col(mut tile Tiles) {
 	// assign colours
 	match tile.val {
-		'' { tile.col = theme.empty }
-		'2' { tile.col = theme.tiles[0] }
-		'4' { tile.col = theme.tiles[1] }
-		'8' { tile.col = theme.tiles[2] }
-		'16' { tile.col = theme.tiles[3] }
-		'32' { tile.col = theme.tiles[4] }
-		'64' { tile.col = theme.tiles[5] }
-		'128' { tile.col = theme.tiles[6] }
-		'256' { tile.col = theme.tiles[7] }
-		'512' { tile.col = theme.tiles[8] }
-		'1024' { tile.col = theme.tiles[9] }
-		'2048' { tile.col = theme.tiles[10] }
+		0 { tile.col = theme.empty }
+		2 { tile.col = theme.tiles[0] }
+		4 { tile.col = theme.tiles[1] }
+		8 { tile.col = theme.tiles[2] }
+		16 { tile.col = theme.tiles[3] }
+		32 { tile.col = theme.tiles[4] }
+		64 { tile.col = theme.tiles[5] }
+		128 { tile.col = theme.tiles[6] }
+		256 { tile.col = theme.tiles[7] }
+		512 { tile.col = theme.tiles[8] }
+		1024 { tile.col = theme.tiles[9] }
+		2048 { tile.col = theme.tiles[10] }
 		else { tile.col = theme.tiles[11] }
 	}
 }
 
 fn (mut app App) gen_tile(num int) {
-	app.field[rand.int_in_range(0, 4)][rand.int_in_range(0, 4)].val = '2'
-	app.field[rand.int_in_range(0, 4)][rand.int_in_range(0, 4)].val = (rand.int_in_range(1,
-		3) * 2).str()
+	for i := 0; i < num; i++ {
+		app.field[rand.int_in_range(0, 4)][rand.int_in_range(0, 4)].val = (rand.int_in_range(1,
+			3) * 2)
+	}
+}
+
+fn (mut app App) move_tiles() {
+	
+	match app.dir {
+		.up {
+			for i in 0 .. 4 {
+				for j in 1 .. 4 {
+					mut tile := app.field[i][j]
+					mut tile_infront := app.field[i][j - 1]
+
+					if tile_infront.val == 0 {
+						tile_infront.val = tile.val
+					} else if tile_infront.val == tile.val {
+						tile_infront.val = tile.val + tile.val
+					}
+				}
+			}
+			app.dir= .no_dir
+		}
+		.down {}
+		.right {}
+		.left {}
+		else {}
+	}
 }
 
 fn frame(mut app App) {
@@ -160,12 +188,7 @@ fn frame(mut app App) {
 			x := i * pos_multiple + zero_pos
 			y := j * pos_multiple + zero_pos
 
-			match app.dir {
-				.up {}
-				.down {}
-				.right {}
-				.left {}
-			}
+			app.move_tiles()
 
 			app.gg.draw_rounded_rect(x, y, tile_dim, tile_dim, corner_radius, tile.col)
 			app.gg.draw_text(x + tile_dim / 3, y + tile_dim / 3, '$tile.val', gx.TextCfg{ size: 30 })
@@ -177,16 +200,16 @@ fn frame(mut app App) {
 
 fn keydown(key gg.KeyCode, mod gg.Modifier, mut app App) {
 	match key {
-		.up {
+		.up, .w {
 			app.dir = .up
 		}
-		.down {
+		.down, .s {
 			app.dir = .down
 		}
-		.right {
+		.right, .d {
 			app.dir = .right
 		}
-		.left {
+		.left, .a {
 			app.dir = .left
 		}
 		else {}
@@ -197,6 +220,7 @@ fn main() {
 	mut app := &App{
 		gg: 0
 		start: true
+		dir: .no_dir
 	}
 
 	mut font_copy := font
@@ -211,6 +235,7 @@ fn main() {
 		bg_color: theme.bg_col
 		width: win_dim
 		height: win_dim
+		keydown_fn: keydown
 		frame_fn: frame
 		user_data: app
 		font_bytes_normal: font_bytes

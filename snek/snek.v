@@ -119,7 +119,7 @@ fn frame(mut app App) {
 	// draw snake
 	for pos in app.snake {
 		app.gg.draw_rect(pos.x * 10, pos.y * 10, 50, 50, gx.white)
-		app.gg.draw_rect(pos.x*10+1, pos.y*10+1, 48, 48, gx.rgb(255, 120, 120))
+		app.gg.draw_rect(pos.x * 10 + 1, pos.y * 10 + 1, 48, 48, gx.rgb(255, 120, 120))
 	}
 
 	// draw apple
