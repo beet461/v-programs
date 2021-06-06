@@ -51,7 +51,7 @@ const (
 const (
 	default  = &Theme{
 		bg_col: gx.rgb(254, 255, 186)
-		padding: gx.rgb(161, 130, 58)
+		padding: gx.rgb(128, 128, 128)
 		empty: gx.rgb(161, 130, 58)
 		text: gx.black
 		tiles: [
@@ -115,7 +115,7 @@ const (
 		]
 	}
 
-	theme    = colorful
+	theme    = default
 )
 
 // assign colors
@@ -140,32 +140,70 @@ fn assign_col(mut tile Tiles) {
 
 fn (mut app App) gen_tile(num int) {
 	for i := 0; i < num; i++ {
-		app.field[rand.int_in_range(0, 4)][rand.int_in_range(0, 4)].val = (rand.int_in_range(1,
+		if app.field[rand.int_in_range(0, 4)][rand.int_in_range(0, 4)].val == 0 {
+			app.field[rand.int_in_range(0, 4)][rand.int_in_range(0, 4)].val = (rand.int_in_range(1,
 			3) * 2)
+		} else {
+			
+		}
+		
 	}
 }
 
-fn (mut app App) move_tiles() {
-	
+fn (mut app App) move_tiles(i int, j int) {
 	match app.dir {
 		.up {
-			for i in 0 .. 4 {
-				for j in 1 .. 4 {
-					mut tile := app.field[i][j]
-					mut tile_infront := app.field[i][j - 1]
-
-					if tile_infront.val == 0 {
-						tile_infront.val = tile.val
-					} else if tile_infront.val == tile.val {
-						tile_infront.val = tile.val + tile.val
-					}
-				}
+			if j == 0 {
+				return
+			} else if app.field[i][j-1].val == 0 {
+				app.field[i][j-1].val = app.field[i][j].val
+				app.field[i][j].val = 0 
+			} else if app.field[i][j-1].val == app.field[i][j].val {
+				app.field[i][j-1].val = app.field[i][j].val * 2
+				app.field[i][j].val = 0 
 			}
-			app.dir= .no_dir
+			
+			
 		}
-		.down {}
-		.right {}
-		.left {}
+		.down {
+			if j == 3 {
+				return
+			} else if app.field[i][j+1].val == 0 {
+				app.field[i][j+1].val = app.field[i][j].val
+				app.field[i][j].val = 0 
+			} else if app.field[i][j+1].val == app.field[i][j].val {
+				app.field[i][j+1].val = app.field[i][j].val * 2
+				app.field[i][j].val = 0 
+			}
+			
+			
+		}
+		.right {
+			if i == 3 {
+				return
+			} else if app.field[i+1][j].val == 0 {
+				app.field[i+1][j].val = app.field[i][j].val
+				app.field[i][j].val = 0 
+			} else if app.field[i+1][j].val == app.field[i][j].val {
+				app.field[i+1][j].val = app.field[i][j].val * 2
+				app.field[i][j].val = 0 
+			}
+			
+			
+		}
+		.left {
+			if i == 0 {
+				return
+			} else if app.field[i-1][j].val == 0 {
+				app.field[i-1][j].val = app.field[i][j].val
+				app.field[i][j].val = 0 
+			} else if app.field[i-1][j].val == app.field[i][j].val {
+				app.field[i-1][j].val = app.field[i][j].val * 2
+				app.field[i][j].val = 0 
+			}
+			
+			
+		}
 		else {}
 	}
 }
@@ -188,13 +226,19 @@ fn frame(mut app App) {
 			x := i * pos_multiple + zero_pos
 			y := j * pos_multiple + zero_pos
 
-			app.move_tiles()
-
+			if app.dir != .no_dir {
+				app.move_tiles(i, j)
+			}
+			dis := match tile.val {
+				0 {''}
+				else{tile.val.str()}
+			}
 			app.gg.draw_rounded_rect(x, y, tile_dim, tile_dim, corner_radius, tile.col)
-			app.gg.draw_text(x + tile_dim / 3, y + tile_dim / 3, '$tile.val', gx.TextCfg{ size: 30 })
+			app.gg.draw_text(x + tile_dim / 3, y + tile_dim / 3, '$dis', gx.TextCfg{ size: 30 })
+			
 		}
 	}
-
+	
 	app.gg.end()
 }
 
@@ -202,15 +246,19 @@ fn keydown(key gg.KeyCode, mod gg.Modifier, mut app App) {
 	match key {
 		.up, .w {
 			app.dir = .up
+			app.gen_tile(1)
 		}
 		.down, .s {
 			app.dir = .down
+			app.gen_tile(1)
 		}
 		.right, .d {
 			app.dir = .right
+			app.gen_tile(1)
 		}
 		.left, .a {
 			app.dir = .left
+			app.gen_tile(1)
 		}
 		else {}
 	}
