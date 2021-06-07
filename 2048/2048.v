@@ -29,7 +29,7 @@ mut:
 	gg    &gg.Context
 	field [4][4]Tiles
 	dir   Dir
-	start bool
+	move  bool
 }
 
 // Font
@@ -52,7 +52,7 @@ const (
 	default  = &Theme{
 		bg_col: gx.rgb(254, 255, 186)
 		padding: gx.rgb(128, 128, 128)
-		empty: gx.rgb(161, 130, 58)
+		empty: gx.rgb(224, 215, 110)
 		text: gx.black
 		tiles: [
 			gx.rgb(181, 181, 167),
@@ -115,7 +115,7 @@ const (
 		]
 	}
 
-	theme    = default
+	theme    = colorful
 )
 
 // assign colors
@@ -138,15 +138,11 @@ fn assign_col(mut tile Tiles) {
 	}
 }
 
-fn (mut app App) gen_tile(num int) {
+fn (mut app App) gen_tile(num int, mut tile Tiles) {
 	for i := 0; i < num; i++ {
-		if app.field[rand.int_in_range(0, 4)][rand.int_in_range(0, 4)].val == 0 {
-			app.field[rand.int_in_range(0, 4)][rand.int_in_range(0, 4)].val = (rand.int_in_range(1,
-			3) * 2)
-		} else {
-			
+		if tile.val == 0 {
+			tile.val = (rand.int_in_range(1, 3) * 2)
 		}
-		
 	}
 }
 
@@ -155,54 +151,46 @@ fn (mut app App) move_tiles(i int, j int) {
 		.up {
 			if j == 0 {
 				return
-			} else if app.field[i][j-1].val == 0 {
-				app.field[i][j-1].val = app.field[i][j].val
-				app.field[i][j].val = 0 
-			} else if app.field[i][j-1].val == app.field[i][j].val {
-				app.field[i][j-1].val = app.field[i][j].val * 2
-				app.field[i][j].val = 0 
+			} else if app.field[i][j - 1].val == 0 {
+				app.field[i][j - 1].val = app.field[i][j].val
+				app.field[i][j].val = 0
+			} else if app.field[i][j - 1].val == app.field[i][j].val {
+				app.field[i][j - 1].val = app.field[i][j].val * 2
+				app.field[i][j].val = 0
 			}
-			
-			
 		}
 		.down {
 			if j == 3 {
 				return
-			} else if app.field[i][j+1].val == 0 {
-				app.field[i][j+1].val = app.field[i][j].val
-				app.field[i][j].val = 0 
-			} else if app.field[i][j+1].val == app.field[i][j].val {
-				app.field[i][j+1].val = app.field[i][j].val * 2
-				app.field[i][j].val = 0 
+			} else if app.field[i][j + 1].val == 0 {
+				app.field[i][j + 1].val = app.field[i][j].val
+				app.field[i][j].val = 0
+			} else if app.field[i][j + 1].val == app.field[i][j].val {
+				app.field[i][j + 1].val = app.field[i][j].val * 2
+				app.field[i][j].val = 0
 			}
-			
-			
 		}
 		.right {
 			if i == 3 {
 				return
-			} else if app.field[i+1][j].val == 0 {
-				app.field[i+1][j].val = app.field[i][j].val
-				app.field[i][j].val = 0 
-			} else if app.field[i+1][j].val == app.field[i][j].val {
-				app.field[i+1][j].val = app.field[i][j].val * 2
-				app.field[i][j].val = 0 
+			} else if app.field[i + 1][j].val == 0 {
+				app.field[i + 1][j].val = app.field[i][j].val
+				app.field[i][j].val = 0
+			} else if app.field[i + 1][j].val == app.field[i][j].val {
+				app.field[i + 1][j].val = app.field[i][j].val * 2
+				app.field[i][j].val = 0
 			}
-			
-			
 		}
 		.left {
 			if i == 0 {
 				return
-			} else if app.field[i-1][j].val == 0 {
-				app.field[i-1][j].val = app.field[i][j].val
-				app.field[i][j].val = 0 
-			} else if app.field[i-1][j].val == app.field[i][j].val {
-				app.field[i-1][j].val = app.field[i][j].val * 2
-				app.field[i][j].val = 0 
+			} else if app.field[i - 1][j].val == 0 {
+				app.field[i - 1][j].val = app.field[i][j].val
+				app.field[i][j].val = 0
+			} else if app.field[i - 1][j].val == app.field[i][j].val {
+				app.field[i - 1][j].val = app.field[i][j].val * 2
+				app.field[i][j].val = 0
 			}
-			
-			
 		}
 		else {}
 	}
@@ -229,36 +217,42 @@ fn frame(mut app App) {
 			if app.dir != .no_dir {
 				app.move_tiles(i, j)
 			}
+
+			if app.move {
+				app.gen_tile(1, mut app.field[rand.int_in_range(0, 4)][rand.int_in_range(0,
+					4)])
+				app.move = false
+			}
+
 			dis := match tile.val {
-				0 {''}
-				else{tile.val.str()}
+				0 { '' }
+				else { tile.val.str() }
 			}
 			app.gg.draw_rounded_rect(x, y, tile_dim, tile_dim, corner_radius, tile.col)
 			app.gg.draw_text(x + tile_dim / 3, y + tile_dim / 3, '$dis', gx.TextCfg{ size: 30 })
-			
 		}
 	}
-	
+
 	app.gg.end()
 }
 
 fn keydown(key gg.KeyCode, mod gg.Modifier, mut app App) {
 	match key {
 		.up, .w {
+			app.move = true
 			app.dir = .up
-			app.gen_tile(1)
 		}
 		.down, .s {
+			app.move = true
 			app.dir = .down
-			app.gen_tile(1)
 		}
 		.right, .d {
+			app.move = true
 			app.dir = .right
-			app.gen_tile(1)
 		}
 		.left, .a {
+			app.move = true
 			app.dir = .left
-			app.gen_tile(1)
 		}
 		else {}
 	}
@@ -267,7 +261,7 @@ fn keydown(key gg.KeyCode, mod gg.Modifier, mut app App) {
 fn main() {
 	mut app := &App{
 		gg: 0
-		start: true
+		move: true
 		dir: .no_dir
 	}
 
@@ -277,7 +271,7 @@ fn main() {
 		font_copy.data().vbytes(font_copy.len)
 	}
 
-	app.gen_tile(2)
+	app.gen_tile(2, mut app.field[rand.int_in_range(0, 4)][rand.int_in_range(0, 4)])
 
 	app.gg = gg.new_context(
 		bg_color: theme.bg_col
