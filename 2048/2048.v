@@ -33,7 +33,7 @@ mut:
 }
 
 // Font
-const font = $embed_file('../assets/VictorMonoAll/TTF/VictorMono-MediumItalic.ttf')
+const font = $embed_file('../assets/RobotoMono-Regular.ttf')
 
 // Game constants
 const (
@@ -139,58 +139,42 @@ fn assign_col(mut tile Tiles) {
 }
 
 fn (mut app App) gen_tile(num int, mut tile Tiles) {
-	for i := 0; i < num; i++ {
-		if tile.val == 0 {
-			tile.val = (rand.int_in_range(1, 3) * 2)
+	mut gen := true
+	for gen {
+		for i := 0; i < num; i++ {
+			if tile.val == 0 {
+				tile.val = (rand.int_in_range(1, 3) * 2)
+				gen = false
+			}
 		}
+	}
+}
+
+fn (mut app App) value(i int, j int, edge int, side int) {
+	if side == edge {
+		return
+	} else if app.field[i][j].val == 0 {
+		app.field[i][j].val = app.field[i][j].val
+		app.field[i][j].val = 0
+	} else if app.field[i][j].val == app.field[i][j].val {
+		app.field[i][j].val = app.field[i][j].val * 2
+		app.field[i][j].val = 0
 	}
 }
 
 fn (mut app App) move_tiles(i int, j int) {
 	match app.dir {
 		.up {
-			if j == 0 {
-				return
-			} else if app.field[i][j - 1].val == 0 {
-				app.field[i][j - 1].val = app.field[i][j].val
-				app.field[i][j].val = 0
-			} else if app.field[i][j - 1].val == app.field[i][j].val {
-				app.field[i][j - 1].val = app.field[i][j].val * 2
-				app.field[i][j].val = 0
-			}
+			app.value(i, j - 1, 0, j)
 		}
 		.down {
-			if j == 3 {
-				return
-			} else if app.field[i][j + 1].val == 0 {
-				app.field[i][j + 1].val = app.field[i][j].val
-				app.field[i][j].val = 0
-			} else if app.field[i][j + 1].val == app.field[i][j].val {
-				app.field[i][j + 1].val = app.field[i][j].val * 2
-				app.field[i][j].val = 0
-			}
+			app.value(i, j + 1, 3, j)
 		}
 		.right {
-			if i == 3 {
-				return
-			} else if app.field[i + 1][j].val == 0 {
-				app.field[i + 1][j].val = app.field[i][j].val
-				app.field[i][j].val = 0
-			} else if app.field[i + 1][j].val == app.field[i][j].val {
-				app.field[i + 1][j].val = app.field[i][j].val * 2
-				app.field[i][j].val = 0
-			}
+			app.value(i + 1, j, 3, i)
 		}
 		.left {
-			if i == 0 {
-				return
-			} else if app.field[i - 1][j].val == 0 {
-				app.field[i - 1][j].val = app.field[i][j].val
-				app.field[i][j].val = 0
-			} else if app.field[i - 1][j].val == app.field[i][j].val {
-				app.field[i - 1][j].val = app.field[i][j].val * 2
-				app.field[i][j].val = 0
-			}
+			app.value(i - 1, j, 0, i)
 		}
 		else {}
 	}
@@ -216,12 +200,7 @@ fn frame(mut app App) {
 
 			if app.dir != .no_dir {
 				app.move_tiles(i, j)
-			}
-
-			if app.move {
-				app.gen_tile(1, mut app.field[rand.int_in_range(0, 4)][rand.int_in_range(0,
-					4)])
-				app.move = false
+				app.move = true
 			}
 
 			dis := match tile.val {
@@ -239,20 +218,36 @@ fn frame(mut app App) {
 fn keydown(key gg.KeyCode, mod gg.Modifier, mut app App) {
 	match key {
 		.up, .w {
-			app.move = true
 			app.dir = .up
+			if app.move && app.dir == .no_dir {
+				app.gen_tile(1, mut app.field[rand.int_in_range(0, 4)][rand.int_in_range(0,
+					4)])
+				app.move = false
+			}
 		}
 		.down, .s {
-			app.move = true
 			app.dir = .down
+			if app.move && app.dir == .no_dir {
+				app.gen_tile(1, mut app.field[rand.int_in_range(0, 4)][rand.int_in_range(0,
+					4)])
+				app.move = false
+			}
 		}
 		.right, .d {
-			app.move = true
 			app.dir = .right
+			if app.move && app.dir == .no_dir {
+				app.gen_tile(1, mut app.field[rand.int_in_range(0, 4)][rand.int_in_range(0,
+					4)])
+				app.move = false
+			}
 		}
 		.left, .a {
-			app.move = true
 			app.dir = .left
+			if app.move && app.dir == .no_dir {
+				app.gen_tile(1, mut app.field[rand.int_in_range(0, 4)][rand.int_in_range(0,
+					4)])
+				app.move = false
+			}
 		}
 		else {}
 	}
