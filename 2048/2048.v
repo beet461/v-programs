@@ -33,7 +33,7 @@ mut:
 }
 
 // Font
-const font = $embed_file('../assets/RobotoMono-Regular.ttf')
+const font = $embed_file('../assets/fonts/RobotoMono-Regular.ttf')
 
 // Game constants
 const (

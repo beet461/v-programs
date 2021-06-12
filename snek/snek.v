@@ -34,7 +34,7 @@ mut:
 }
 
 // Font
-const font = $embed_file('../assets/VictorMonoAll/TTF/VictorMono-MediumItalic.ttf')
+const font = $embed_file('../assets/fonts/VictorMonoAll/TTF/VictorMono-MediumItalic.ttf')
 
 // Two functions are for adding or subtracting two instances of Pos together
 fn (x Pos) + (y Pos) Pos {
