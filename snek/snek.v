@@ -73,7 +73,7 @@ fn frame(mut app App) {
 		app.reset()
 	}
 
-	app.gg.draw_rect(50, 50, 700, 700, gx.white)
+	app.gg.draw_rect(100, 100, 700, 700, gx.white)
 
 	// Records ticks now and compares it with the last time it was checked. If it above tick_diff, then it continues
 	ticks_now := time.ticks()
@@ -118,12 +118,12 @@ fn frame(mut app App) {
 
 	// draw snake
 	for pos in app.snake {
-		app.gg.draw_rect(pos.x * 10, pos.y * 10, 50, 50, gx.white)
-		app.gg.draw_rect(pos.x * 10 + 1, pos.y * 10 + 1, 48, 48, gx.rgb(255, 120, 120))
+		app.gg.draw_rect(pos.x * 10 + 50, pos.y * 10 + 50, 50, 50, gx.white)
+		app.gg.draw_rect(pos.x * 10 + 1 + 50, pos.y * 10 + 1 + 50, 48, 48, gx.rgb(255, 120, 120))
 	}
 
 	// draw apple
-	app.gg.draw_rounded_rect(app.apple.x * 10, app.apple.y * 10, 50, 50, 25, gx.rgb(135,
+	app.gg.draw_rounded_rect(app.apple.x * 10 + 50, app.apple.y * 10 + 50, 50, 50, 25, gx.rgb(135,
 		255, 135))
 
 	app.gg.draw_text(350, 10, 'Score: $app.score', gx.TextCfg{ size: 30 })
@@ -131,27 +131,56 @@ fn frame(mut app App) {
 	app.gg.end()
 }
 
-fn keydown(key gg.KeyCode, mod gg.Modifier, mut app App) {
+fn (mut app App) change_dir(dir Dir, o_dir Dir) {
+	if app.dir != o_dir {
+		app.dir = dir
+	}
+}
+
+fn keydown(key gg.KeyCode, mut app App) {
 	match key {
 		.up, .w {
-			if app.dir != .down {
-				app.dir = .up
-			}
+			app.change_dir(.up, .down)
 		}
 		.down, .s {
-			if app.dir != .up {
-				app.dir = .down
-			}
+			app.change_dir(.down, .up)
 		}
 		.right, .d {
-			if app.dir != .left {
-				app.dir = .right
-			}
+			app.change_dir(.right, .left)
 		}
 		.left, .a {
-			if app.dir != .right {
-				app.dir = .left
-			}
+			app.change_dir(.left, .right)
+		}
+		else {}
+	}
+}
+
+fn touch_handle(touches [8]C.sapp_touchpoint) {
+
+}
+
+fn click(x f32, y f32, button gg.MouseButton, mut app App) {
+	if button == .left {
+		if y < 100 {
+			app.change_dir(.up, .down)
+		} else if y > 850 && y < 1050 {
+			app.change_dir(.down, .up)
+		} else if x > 850 && x < 1050 {
+			app.change_dir(.right, .left)
+		} else if x < 100 {
+			app.change_dir(.left, .right)
+		}
+	}
+}
+
+fn event(e &gg.Event, mut app App) {
+	match e.typ {
+		.key_down {
+			keydown(e.key_code, mut app)
+		} .touches_began {
+			touch_handle(e.touches)
+		} .mouse_down {
+			click(e.mouse_x, e.mouse_y, e.mouse_button, mut app)
 		}
 		else {}
 	}
@@ -177,8 +206,8 @@ fn main() {
 		height: win_height
 		resizable: false
 		frame_fn: frame
-		keydown_fn: keydown
 		user_data: app
+		event_fn: event
 		window_title: 'Snek'
 		font_bytes_normal: font_bytes
 	)

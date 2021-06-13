@@ -1,5 +1,11 @@
 import gg
 import gx
+import ui
+
+struct Uapp {
+	mut:
+		window &ui.Window
+}
 
 struct App {
 mut:
@@ -7,11 +13,9 @@ mut:
 	
 }
 
-const font = $embed_file('./assets/fonts/RobotoMono-Regular.ttf')
-
 fn frame(mut app App) {
 	app.gg.begin()
-	app.gg.draw_text(100, 100, '${gg.window_size()}', gx.TextCfg{ size:30 })
+	app.gg.draw_rect(100, 100, 100, 100, gx.rgb(254, 127, 197))
 	app.gg.end()
 }
 
@@ -20,16 +24,28 @@ fn main() {
 		gg: 0
 	}
 
-	mut font_copy := font
-	font_bytes := unsafe {
-		font_copy.data().vbytes(font_copy.len)
+	mut uapp := &Uapp{
+		window: 0
 	}
+
+	window := ui.window({
+		state: uapp
+	}, [
+		ui.rectangle(
+			height: 100
+			width: 100
+			color: gx.rgb(243, 5, 67)
+			x: 200
+			y: 200
+		)
+	])
 
 	app.gg = gg.new_context(
 		bg_color: gx.white
 		frame_fn: frame
 		user_data: app
-		font_bytes_normal: font_bytes
 	)
+	ui.run(window)
 	app.gg.run()
+	
 }
