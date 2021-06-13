@@ -45,7 +45,7 @@ fn (x Pos) - (y Pos) Pos {
 	return Pos{x.x - y.x, x.y - y.y}
 }
 
-// Generates random number divisb=ible by 5 and within board and not on snake
+// Generates random number divisible by 5 and within board and not on snake
 fn (mut app App) food() {
 	app.apple.x = rand.int_in_range(5, 70)
 	app.apple.y = rand.int_in_range(5, 70)
