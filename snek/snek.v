@@ -23,15 +23,29 @@ mut:
 	y int
 }
 
+struct Touch {
+	mut:
+		pos Pos
+		time time.Time
+}
+
+struct TouchInfo {
+	mut:
+	start Touch
+	end Touch
+}
+
 struct App {
 mut:
 	gg       &gg.Context
 	snake    []Pos
 	apple    Pos
+	touch	TouchInfo
 	dir      Dir
 	score    int
 	pre_tick i64
 }
+
 
 // Font
 const font = $embed_file('../assets/fonts/VictorMonoAll/TTF/VictorMono-MediumItalic.ttf')
@@ -155,8 +169,8 @@ fn keydown(key gg.KeyCode, mut app App) {
 	}
 }
 
-fn touch_handle(touches [8]C.sapp_touchpoint) {
-
+fn touch_handle() {
+	
 }
 
 fn click(x f32, y f32, button gg.MouseButton, mut app App) {
@@ -177,10 +191,27 @@ fn event(e &gg.Event, mut app App) {
 	match e.typ {
 		.key_down {
 			keydown(e.key_code, mut app)
-		} .touches_began {
-			touch_handle(e.touches)
 		} .mouse_down {
 			click(e.mouse_x, e.mouse_y, e.mouse_button, mut app)
+		} .touches_began {
+			touch := e.touches[0]
+			app.touch.start = {
+				pos: {
+					x: int(touch.pos_x)
+					y: int(touch.pos_y)
+				}
+				time: time.now()
+			}	
+		} .touches_ended {
+			touch := e.touches[0]
+			app.touch.end = {
+				pos: {
+					x: int(touch.pos_x)
+					y: int(touch.pos_y)
+				}
+				time: time.now()
+			}
+			app.touch_handle()
 		}
 		else {}
 	}
