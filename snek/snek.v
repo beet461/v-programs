@@ -13,8 +13,8 @@ enum Dir {
 
 const (
 	tick_diff  = 200
-	win_width  = 800
-	win_height = 800
+	win_width  = 900
+	win_height = 900
 )
 
 struct Pos {
@@ -24,15 +24,15 @@ mut:
 }
 
 struct Touch {
-	mut:
-		pos Pos
-		time time.Time
+mut:
+	pos  Pos
+	time time.Time
 }
 
 struct TouchInfo {
-	mut:
+mut:
 	start Touch
-	end Touch
+	end   Touch
 }
 
 struct App {
@@ -40,12 +40,11 @@ mut:
 	gg       &gg.Context
 	snake    []Pos
 	apple    Pos
-	touch	TouchInfo
+	touch    TouchInfo
 	dir      Dir
 	score    int
 	pre_tick i64
 }
-
 
 // Font
 const font = $embed_file('../assets/fonts/VictorMonoAll/TTF/VictorMono-MediumItalic.ttf')
@@ -130,15 +129,21 @@ fn frame(mut app App) {
 		}
 	}
 
+	mut col := 0
+
 	// draw snake
 	for pos in app.snake {
 		app.gg.draw_rect(pos.x * 10 + 50, pos.y * 10 + 50, 50, 50, gx.white)
-		app.gg.draw_rect(pos.x * 10 + 1 + 50, pos.y * 10 + 1 + 50, 48, 48, gx.rgb(255, 120, 120))
+		app.gg.draw_rect(pos.x * 10 + 1 + 50, pos.y * 10 + 1 + 50, 48, 48, match col {
+			0 { gx.red }
+			else { gx.rgb(255, 120, 120) }
+		})
+		col++
 	}
 
 	// draw apple
-	app.gg.draw_rounded_rect(app.apple.x * 10 + 50, app.apple.y * 10 + 50, 50, 50, 25, gx.rgb(135,
-		255, 135))
+	app.gg.draw_rounded_rect(app.apple.x * 10 + 50, app.apple.y * 10 + 50, 50, 50, 25,
+		gx.rgb(135, 255, 135))
 
 	app.gg.draw_text(350, 10, 'Score: $app.score', gx.TextCfg{ size: 30 })
 
@@ -169,8 +174,7 @@ fn keydown(key gg.KeyCode, mut app App) {
 	}
 }
 
-fn touch_handle() {
-	
+fn (mut app App) touch_handle() {
 }
 
 fn click(x f32, y f32, button gg.MouseButton, mut app App) {
@@ -191,9 +195,11 @@ fn event(e &gg.Event, mut app App) {
 	match e.typ {
 		.key_down {
 			keydown(e.key_code, mut app)
-		} .mouse_down {
+		}
+		.mouse_down {
 			click(e.mouse_x, e.mouse_y, e.mouse_button, mut app)
-		} .touches_began {
+		}
+		.touches_began {
 			touch := e.touches[0]
 			app.touch.start = {
 				pos: {
@@ -201,8 +207,9 @@ fn event(e &gg.Event, mut app App) {
 					y: int(touch.pos_y)
 				}
 				time: time.now()
-			}	
-		} .touches_ended {
+			}
+		}
+		.touches_ended {
 			touch := e.touches[0]
 			app.touch.end = {
 				pos: {
