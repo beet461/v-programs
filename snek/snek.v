@@ -48,9 +48,6 @@ mut:
 	turned bool
 }
 
-// Font
-const font = $embed_file('../assets/fonts/VictorMonoAll/TTF/VictorMono-MediumItalic.ttf')
-
 // Two functions are for adding or subtracting two instances of Pos together
 fn (x Pos) + (y Pos) Pos {
 	return Pos{x.x + y.x, x.y + y.y}
@@ -70,7 +67,12 @@ fn generate_pos() Pos {
 
 // Generates random number divisible by 5 and within board and not on snake
 fn (mut app App) food() {
-	app.apple = generate_pos()
+	apple := generate_pos()
+	if apple in app.snake[0..] {
+		app.food()
+	} else {
+		app.apple = apple
+	}
 }
 
 fn (mut app App) reset() {
@@ -90,7 +92,7 @@ fn frame(mut app App) {
 		app.reset()
 	}
 
-	app.gg.draw_empty_rect(100, 100, 700, 700, gx.gray)
+	app.gg.draw_empty_rect(99, 99, 703, 703, gx.white)
 
 	// Records ticks now and compares it with the last time it was checked. If it above tick_diff, then it continues
 	ticks_now := time.ticks()
@@ -125,22 +127,16 @@ fn frame(mut app App) {
 		app.turned = true
 	}
 
-	mut first := true
-
-	// draw snake and choose the colour based on whether or not it is the head of the snake (or the first array element)
+	// draw snake and border
 	for pos in app.snake {
-		app.gg.draw_rect(pos.x, pos.y, 50, 50, gx.white)
-		app.gg.draw_rect(pos.x + 1, pos.y + 1, 48, 48, match first {
-			true { gx.red }
-			else { gx.rgb(255, 120, 120) }
-		})
-		first = false
+		app.gg.draw_empty_rect(pos.x, pos.y, 50, 50, gx.black)
+		app.gg.draw_rect(pos.x + 1, pos.y + 1, 48, 48, gx.dark_green)
 	}
 
 	// draw apple
-	app.gg.draw_rounded_rect(app.apple.x, app.apple.y, 50, 50, 25, gx.rgb(135, 255, 135))
+	app.gg.draw_rounded_rect(app.apple.x, app.apple.y, 50, 50, 25, gx.red)
 
-	app.gg.draw_text(350, 10, 'Score: $app.score', gx.TextCfg{ size: 30 })
+	app.gg.draw_text(400, 10, 'Score: $app.score', gx.TextCfg{ size: 30, color: gx.white })
 
 	app.gg.end()
 }
@@ -211,14 +207,8 @@ fn main() {
 		dir: .right
 	}
 
-	mut font_copy := font
-
-	font_bytes := unsafe {
-		font_copy.data().vbytes(font_copy.len)
-	}
-
 	app.gg = gg.new_context(
-		bg_color: gx.rgb(230, 252, 236)
+		bg_color: gx.black
 		width: win_width
 		height: win_height
 		resizable: false
@@ -226,7 +216,6 @@ fn main() {
 		user_data: app
 		event_fn: event
 		window_title: 'Snek'
-		font_bytes_normal: font_bytes
 	)
 
 	app.gg.run()
