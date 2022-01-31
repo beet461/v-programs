@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="x-ua-compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>main | vdoc</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet">
+		<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+		<link rel="manifest" href="site.webmanifest">
+		<link rel="mask-icon" href="safari-pinned-tab.svg" color="#5bbad5">
+		<meta name="msapplication-TileColor" content="#da532c">
+		<meta name="theme-color" content="#ffffff">
+		
+		<link rel="stylesheet" href="doc.css" />
+		<link rel="stylesheet" href="normalize.css" />
+		<script src="dark-mode.js"></script>
+	</head>
+	<body>
+		<div><a id="skip-to-content-link" href="#main-content">Skip to content</a></div>
+		<div id="page">
+			<header class="doc-nav hidden">
+				<div class="heading-container">
+					<div class="heading">
+						<div class="info">
+							<div class="module">main</div>
+							<div class="toggle-version-container">
+								<span></span>
+								<div id="dark-mode-toggle" role="switch" aria-checked="false" aria-label="Toggle dark mode"><svg xmlns="http://www.w3.org/2000/svg" class="light-icon" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.79 1.42-1.41zM4 10.5H1v2h3v-2zm9-9.95h-2V3.5h2V.55zm7.45 3.91l-1.41-1.41-1.79 1.79 1.41 1.41 1.79-1.79zm-3.21 13.7l1.79 1.8 1.41-1.41-1.8-1.79-1.4 1.4zM20 10.5v2h3v-2h-3zm-8-5c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm-1 16.95h2V19.5h-2v2.95zm-7.45-3.91l1.41 1.41 1.79-1.8-1.41-1.41-1.79 1.8z"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" class="dark-icon" enable-background="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24"><g><rect fill="none" height="24" width="24"/></g><g><g><g><path d="M11.1,12.08C8.77,7.57,10.6,3.6,11.63,2.01C6.27,2.2,1.98,6.59,1.98,12c0,0.14,0.02,0.28,0.02,0.42 C2.62,12.15,3.29,12,4,12c1.66,0,3.18,0.83,4.1,2.15C9.77,14.63,11,16.17,11,18c0,1.52-0.87,2.83-2.12,3.51 c0.98,0.32,2.03,0.5,3.11,0.5c3.5,0,6.58-1.8,8.37-4.52C18,17.72,13.38,16.52,11.1,12.08z"/></g><path d="M7,16l-0.18,0C6.4,14.84,5.3,14,4,14c-1.66,0-3,1.34-3,3s1.34,3,3,3c0.62,0,2.49,0,3,0c1.1,0,2-0.9,2-2 C9,16.9,8.1,16,7,16z"/></g></g></svg>
+</div>
+							</div>
+							<svg xmlns="http://www.w3.org/2000/svg" id="toggle-menu" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+
+						</div>
+						<input type="text" id="search" placeholder="Search... (beta)" autocomplete="off">
+					</div>
+				</div>
+				<nav class="search hidden"></nav>
+				<nav class="content hidden">
+					<ul>
+						<li class="open"><a href="#Constants">Constants</a></li>
+<li class="open"><a href="#bounce_check">fn bounce_check</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#smooth_movement">fn smooth_movement</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#frame">fn frame</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#create_board">fn create_board</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#create_puck">fn create_puck</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#player">fn player</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#event">fn event</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#placeholderev_fn">fn placeholderev_fn</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#tile_builder">fn tile_builder</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#main">fn main</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#FNevent">type FNevent</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#Dim">struct Dim</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#Puck">struct Puck</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#Score">struct Score</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#Border">struct Border</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#Tile">struct Tile</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#App">struct App</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#Key_Pressed">struct Key_Pressed</a>        <ul>
+</ul>
+</li>
+<li class="open"><a href="#TileCfg">struct TileCfg</a>        <ul>
+</ul>
+</li>
+
+					</ul>
+				</nav>
+			</header>
+			<div class="doc-scrollview" id="main-content">
+				<div class="doc-container">
+					<div class="doc-content">
+						<section id="main" class="doc-node">
+							<div class="title"><h1> main</h1></div>
+
+</section>
+
+						<section id="Constants" class="doc-node const">
+							<div class="title"><h2>Constants <a href="#Constants">#</a></h2></div>
+
+</section>
+						<section id="" class="doc-node const">
+<pre class="signature"><code><span class="token keyword">const</span> <span class="token punctuation">(</span>
+	width  <span class="token operator">=</span> <span class="token number">800</span>
+	height <span class="token operator">=</span> <span class="token number">600</span>
+<span class="token punctuation">)</span></code></pre>
+
+
+</section>
+						<section id="bounce_check" class="doc-node">
+							<div class="title"><h2>fn bounce_check <a href="#bounce_check">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">bounce_check</span><span class="token punctuation">(</span><span class="token keyword">mut</span> puck Puck<span class="token punctuation">,</span> <span class="token keyword">mut</span> app App<span class="token punctuation">)</span></code></pre>
+
+
+</section>
+						<section id="smooth_movement" class="doc-node">
+							<div class="title"><h2>fn smooth_movement <a href="#smooth_movement">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">smooth_movement</span><span class="token punctuation">(</span><span class="token keyword">mut</span> position <span class="token operator">&</span><span class="token builtin">f32</span><span class="token punctuation">,</span> speed <span class="token builtin">f32</span><span class="token punctuation">,</span> pressed <span class="token operator">&</span><span class="token builtin">bool</span><span class="token punctuation">,</span> total_length <span class="token builtin">f32</span><span class="token punctuation">,</span> min_border <span class="token builtin">f32</span><span class="token punctuation">,</span> max_border <span class="token builtin">f32</span><span class="token punctuation">)</span></code></pre>
+<p>smooth_movement moves the tile along speed amount of pixels every 100ms
+as long as pressed is true (pressed represents a key pressed down or not).<br>
+If the result of the movement would mean the tile pos is &lt; 0 or &gt; b, then no movement happens.</p>
+
+</section>
+						<section id="frame" class="doc-node">
+							<div class="title"><h2>fn frame <a href="#frame">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">frame</span><span class="token punctuation">(</span><span class="token keyword">mut</span> app App<span class="token punctuation">)</span></code></pre>
+
+
+</section>
+						<section id="create_board" class="doc-node">
+							<div class="title"><h2>fn create_board <a href="#create_board">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">create_board</span><span class="token punctuation">(</span><span class="token keyword">mut</span> app App<span class="token punctuation">)</span></code></pre>
+
+
+</section>
+						<section id="create_puck" class="doc-node">
+							<div class="title"><h2>fn create_puck <a href="#create_puck">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">create_puck</span><span class="token punctuation">(</span><span class="token keyword">mut</span> app App<span class="token punctuation">)</span></code></pre>
+
+
+</section>
+						<section id="player" class="doc-node">
+							<div class="title"><h2>fn player <a href="#player">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">player</span><span class="token punctuation">(</span>e <span class="token operator">&</span>gg<span class="token punctuation">.</span>Event<span class="token punctuation">,</span> <span class="token keyword">mut</span> tile Tile<span class="token punctuation">,</span> <span class="token keyword">mut</span> app App<span class="token punctuation">)</span></code></pre>
+
+
+</section>
+						<section id="event" class="doc-node">
+							<div class="title"><h2>fn event <a href="#event">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">event</span><span class="token punctuation">(</span>e <span class="token operator">&</span>gg<span class="token punctuation">.</span>Event<span class="token punctuation">,</span> <span class="token keyword">mut</span> app App<span class="token punctuation">)</span></code></pre>
+<p>event runs the given event functions in all tiles</p>
+
+</section>
+						<section id="placeholderev_fn" class="doc-node">
+							<div class="title"><h2>fn placeholderev_fn <a href="#placeholderev_fn">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">placeholderev_fn</span><span class="token punctuation">(</span>e <span class="token operator">&</span>gg<span class="token punctuation">.</span>Event<span class="token punctuation">,</span> <span class="token keyword">mut</span> tile Tile<span class="token punctuation">,</span> <span class="token keyword">mut</span> app App<span class="token punctuation">)</span></code></pre>
+<p>placeholderev_fn is used a place holder event function, because the program crashes if one is not there</p>
+
+</section>
+						<section id="tile_builder" class="doc-node">
+							<div class="title"><h2>fn tile_builder <a href="#tile_builder">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">tile_builder</span><span class="token punctuation">(</span>tile TileCfg<span class="token punctuation">)</span> <span class="token operator">&</span>Tile</code></pre>
+<p>tile_builder takes in input as TileCfg and returns a usable Tile object</p>
+
+</section>
+						<section id="main" class="doc-node">
+							<div class="title"><h2>fn main <a href="#main">#</a></h2></div><pre class="signature"><code><span class="token keyword">fn</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span></code></pre>
+
+
+</section>
+						<section id="FNevent" class="doc-node">
+							<div class="title"><h2>type FNevent <a href="#FNevent">#</a></h2></div><pre class="signature"><code><span class="token keyword">type</span> FNevent <span class="token operator">=</span> <span class="token keyword">fn</span> <span class="token punctuation">(</span>key <span class="token operator">&</span>gg<span class="token punctuation">.</span>Event<span class="token punctuation">,</span> <span class="token keyword">mut</span> tile Tile<span class="token punctuation">,</span> <span class="token keyword">mut</span> app App<span class="token punctuation">)</span></code></pre>
+<p>FNevent is called when an event happens. The tile can perform actions based on the event.</p>
+
+</section>
+						<section id="Dim" class="doc-node">
+							<div class="title"><h2>struct Dim <a href="#Dim">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> <span class="token symbol">Dim</span> <span class="token punctuation">{</span>
+<span class="token keyword">mut</span><span class="token punctuation">:</span>
+	x <span class="token builtin">f32</span>
+	y <span class="token builtin">f32</span>
+<span class="token punctuation">}</span></code></pre>
+
+
+</section>
+						<section id="Puck" class="doc-node">
+							<div class="title"><h2>struct Puck <a href="#Puck">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> <span class="token symbol">Puck</span> <span class="token punctuation">{</span>
+<span class="token keyword">mut</span><span class="token punctuation">:</span>
+	pos             Dim
+	radius          <span class="token builtin">f32</span>
+	color           gx<span class="token punctuation">.</span>Color
+	speed           Dim
+	left_reflected  <span class="token builtin">bool</span>
+	right_reflected <span class="token builtin">bool</span>
+<span class="token punctuation">}</span></code></pre>
+
+
+</section>
+						<section id="Score" class="doc-node">
+							<div class="title"><h2>struct Score <a href="#Score">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> <span class="token symbol">Score</span> <span class="token punctuation">{</span>
+<span class="token keyword">mut</span><span class="token punctuation">:</span>
+	p_one <span class="token builtin">int</span>
+	p_two <span class="token builtin">int</span>
+<span class="token punctuation">}</span></code></pre>
+
+
+</section>
+						<section id="Border" class="doc-node">
+							<div class="title"><h2>struct Border <a href="#Border">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> <span class="token symbol">Border</span> <span class="token punctuation">{</span>
+<span class="token keyword">mut</span><span class="token punctuation">:</span>
+	enabled <span class="token builtin">bool</span>
+	weight  <span class="token builtin">f32</span>
+	col     gx<span class="token punctuation">.</span>Color
+<span class="token punctuation">}</span></code></pre>
+<p>Border is used for configuring borders.<br>
+A bigger rectangle is drawn behind the main tile body.<br>
+Its dimensions are the tile's dimensions + weight * 2.<br>
+Its position is the tile's pos - weight.</p>
+
+</section>
+						<section id="Tile" class="doc-node">
+							<div class="title"><h2>struct Tile <a href="#Tile">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> <span class="token symbol">Tile</span> <span class="token punctuation">{</span>
+<span class="token keyword">mut</span><span class="token punctuation">:</span>
+	tag         <span class="token builtin">string</span>
+	dim         Dim
+	pos         Dim
+	border      Border
+	eventfn     FNevent
+	key_pressed Key_Pressed
+	collision   <span class="token builtin">bool</span>
+	color       gx<span class="token punctuation">.</span>Color
+<span class="token punctuation">}</span></code></pre>
+<p>Tile contains the configuration options for a rectangle/square.<br>
+Any interaction is controlled through its event function. Collision is not really used.</p>
+
+</section>
+						<section id="App" class="doc-node">
+							<div class="title"><h2>struct App <a href="#App">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> <span class="token symbol">App</span> <span class="token punctuation">{</span>
+<span class="token keyword">mut</span><span class="token punctuation">:</span>
+	gg        <span class="token operator">&</span>gg<span class="token punctuation">.</span>Context
+	puck      Puck
+	score     Score
+	last_tick <span class="token builtin">i64</span>
+	tiles     <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token operator">&</span>Tile
+<span class="token punctuation">}</span></code></pre>
+
+
+</section>
+						<section id="Key_Pressed" class="doc-node">
+							<div class="title"><h2>struct Key_Pressed <a href="#Key_Pressed">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> <span class="token symbol">Key_Pressed</span> <span class="token punctuation">{</span>
+<span class="token keyword">mut</span><span class="token punctuation">:</span>
+	w <span class="token builtin">bool</span>
+	a <span class="token builtin">bool</span>
+	s <span class="token builtin">bool</span>
+	d <span class="token builtin">bool</span>
+<span class="token punctuation">}</span></code></pre>
+<p>Key_Pressed is used to see if a particular key is pressed, so the tile can continue to moved or stopped</p>
+
+</section>
+						<section id="TileCfg" class="doc-node">
+							<div class="title"><h2>struct TileCfg <a href="#TileCfg">#</a></h2></div><pre class="signature"><code><span class="token keyword">struct</span> <span class="token symbol">TileCfg</span> <span class="token punctuation">{</span>
+	tag            <span class="token builtin">string</span>   <span class="token operator">=</span> <span class="token string">'#tile'</span>
+	width          <span class="token builtin">f32</span>      <span class="token operator">=</span> <span class="token number">100</span>
+	height         <span class="token builtin">f32</span>      <span class="token operator">=</span> <span class="token number">100</span>
+	pos_x          <span class="token builtin">f32</span>      <span class="token operator">=</span> <span class="token number">100</span>
+	pos_y          <span class="token builtin">f32</span>      <span class="token operator">=</span> <span class="token number">100</span>
+	border_enabled <span class="token builtin">bool</span>     <span class="token operator">=</span> <span class="token boolean">true</span>
+	b_weight       <span class="token builtin">f32</span>      <span class="token operator">=</span> <span class="token number">1</span>
+	b_color        gx<span class="token punctuation">.</span>Color <span class="token operator">=</span> gx<span class="token punctuation">.</span>black
+	color          gx<span class="token punctuation">.</span>Color <span class="token operator">=</span> gx<span class="token punctuation">.</span>white
+	eventfn        FNevent  <span class="token operator">=</span> placeholderev_fn
+	collision      <span class="token builtin">bool</span>
+<span class="token punctuation">}</span></code></pre>
+<p>TileCfg is a broken down version of Tile, used for configuration of a tile before being built</p>
+
+</section>
+
+						<div class="footer">
+							Powered by vdoc. Generated on: 31 Jan 2022 17:58:00
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		<script src="doc.js"></script>
+		<script async src="search_index.js" type="text/javascript"></script>
+	</body>
+</html>
